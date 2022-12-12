@@ -1,0 +1,17 @@
+form{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+label{
+    margin-top: 15px;
+}
+input[type="submit"]{
+    margin-top: 15px;
+    width: fit-content;
+}
+p.error{
+    color: red;
+    margin: 10px 0 5px 0;
+    display: none;
+}
