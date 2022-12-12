@@ -14,22 +14,34 @@ if(!empty($_POST))
        
             return '';
         }
-        $password = password_hash(htmlspecialchars($_POST['password']), PASSWORD_BCRYPT);
         $username = htmlspecialchars($_POST['username']);
-        $date = date('d-m-y');
-
         $db = new PDO('mysql:host=localhost;port=3307;dbname=forum-php', 'root');
-        $sql = "INSERT INTO utilisateur (Nom_utilisateur, Mot_De_Passe, Date_Inscription, IP) VALUES (:Nom_utilisateur, :Mot_De_Passe, :Date_Inscription, :IP)";
-        $query = $db->prepare($sql);
-        $query->execute([
-            'Nom_utilisateur'=> $username,
-            'Mot_De_Passe' => $password,
-            'Date_Inscription' => $date,
-            'IP' => getClientIP()
+        $sql2 = "SELECT * FROM utilisateur WHERE Nom_utilisateur = :Nom_utilisateur";
+        $query2 = $db->prepare($sql2);
+        $query2->execute([
+            'Nom_utilisateur'=> $username
         ]);
-        session_start();
-        $_SESSION['connected'] = false;
-        header('Location: login.php');
+        if(!$query2->fetch())
+        {
+            $password = password_hash(htmlspecialchars($_POST['password']), PASSWORD_BCRYPT);
+            $date = date('d-m-y');
+            $sql = "INSERT INTO utilisateur (Nom_utilisateur, Mot_De_Passe, Date_Inscription, IP) VALUES (:Nom_utilisateur, :Mot_De_Passe, :Date_Inscription, :IP)";
+            $query = $db->prepare($sql);
+            $query->execute([
+                'Nom_utilisateur'=> $username,
+                'Mot_De_Passe' => $password,
+                'Date_Inscription' => $date,
+                'IP' => getClientIP()
+            ]);
+            session_start();
+            $_SESSION['connected'] = false;
+            header('Location: login.php');
+        }
+        else{
+            echo "<h2 style='color:red;'>";
+            echo "Ce nom d'utilisateur est déjà utilisé";
+            echo "</h2>";
+        }
     }
 }
 ?>
@@ -43,6 +55,7 @@ if(!empty($_POST))
     <title>Créer un compte</title>
 </head>
 <body>
+    <h1>Créez votre compte</h1>
     <form action="/forum-php/create-account.php" method="POST">
 
         

@@ -31,6 +31,7 @@ else if(!empty($_POST)){
     <title>Connexion</title>
 </head>
 <body>
+    <h1>Se connecter</h1>
     <form action="login.php" method="POST">
         <label for="username">Nom d'utilisateur</label>
         <input type="text" name="username" placeholder="Nom d'utilisateur">
