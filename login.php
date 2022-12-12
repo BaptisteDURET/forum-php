@@ -4,6 +4,22 @@ if(isset($_SESSION['connected']) && $_SESSION['connected'] == true)
 {
     header('Location: index.php');
 }
+else if(!empty($_POST)){
+    $username = htmlspecialchars($_POST['username']);
+    $password = password_hash(htmlspecialchars($_POST['password']), PASSWORD_BCRYPT);
+    $db = new PDO('mysql:host=localhost;port=3307;dbname=forum-php', 'root');
+    $sql = "SELECT * FROM utilisateur WHERE Nom_utilisateur = :Nom_utilisateur";
+    $query = $db->prepare($sql);
+    $query->execute([
+        'Nom_utilisateur'=> $username
+    ]);
+    if(password_verify(htmlspecialchars($_POST['password']), $query->fetch()['Mot_De_Passe']))
+    {
+        $_SESSION['connected'] = true;
+        $_SESSION['username'] = $username;
+        header('Location: index.php');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="FR-fr">
