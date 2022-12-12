@@ -19,16 +19,18 @@ if(!empty($_POST))
         $date = date('d-m-y');
 
         $db = new PDO('mysql:host=localhost;port=3307;dbname=forum-php', 'root');
-        $sql = "INSERT INTO users (Nom_utilisateur, Mot_De_Passe, Date_Inscription, IP) VALUES (:Nom_utilisateur, :Mot_De_Passe, :Date_Inscription, :IP)";
-        $stmt= $db->prepare($sql);
-        $stmt->execute([
+        $sql = "INSERT INTO utilisateur (Nom_utilisateur, Mot_De_Passe, Date_Inscription, IP) VALUES (:Nom_utilisateur, :Mot_De_Passe, :Date_Inscription, :IP)";
+        $query = $db->prepare($sql);
+        $query->execute([
             'Nom_utilisateur'=> $username,
             'Mot_De_Passe' => $password,
             'Date_Inscription' => $date,
             'IP' => getClientIP()
         ]);
+        session_start();
+        $_SESSION['connected'] = false;
+        header('Location: login.php');
     }
-    var_dump($_POST);
 }
 ?>
 <!DOCTYPE html>
