@@ -24,7 +24,7 @@ if(!empty($_POST))
         if(!$query2->fetch())
         {
             $password = password_hash(htmlspecialchars($_POST['password']), PASSWORD_BCRYPT);
-            $date = date('d-m-y');
+            $date = date('y-m-d');
             $sql = "INSERT INTO utilisateur (Nom_utilisateur, Mot_De_Passe, Date_Inscription, IP) VALUES (:Nom_utilisateur, :Mot_De_Passe, :Date_Inscription, :IP)";
             $query = $db->prepare($sql);
             $query->execute([
