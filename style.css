@@ -58,7 +58,7 @@ table{
     max-width: 80vw;
     white-space: normal;
     table-layout: fixed;
-   
+
 }
 
 #logout{
@@ -118,4 +118,14 @@ td:last-child{
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+a, h2{
+    width: fit-content;
+    display: inline-block ;
+}
+
+img{
+    object-fit: cover;
+    border-radius: 50%;
 }
