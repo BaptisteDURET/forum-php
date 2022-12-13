@@ -14,16 +14,20 @@ else if(!empty($_POST)){
         'Nom_utilisateur'=> $username
     ]);
     $fetch = $query->fetch();
-    $id = $fetch['Identifiant_Utilisateur'];
-    $admin = $fetch['Admin'];
-    if(password_verify(htmlspecialchars($_POST['password']), $fetch['Mot_De_Passe']))
+    if($fetch)
     {
-        $_SESSION['connected'] = true;
-        $_SESSION['username'] = $username;
-        $_SESSION['id'] = $id;
-        $_SESSION['admin'] = $admin;
-        var_dump($_SESSION);
-        header('Location: index.php');
+        if(password_verify(htmlspecialchars($_POST['password']), $fetch['Mot_De_Passe']))
+        {
+            
+            $id = $fetch['Identifiant_Utilisateur'];
+            $admin = $fetch['Admin'];
+            $_SESSION['connected'] = true;
+            $_SESSION['username'] = $username;
+            $_SESSION['id'] = $id;
+            $_SESSION['admin'] = $admin;
+            var_dump($_SESSION);
+            header('Location: index.php');
+        }
     }
 }
 ?>
