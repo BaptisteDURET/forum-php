@@ -13,7 +13,30 @@ if (!empty($_POST)){
     $query->execute([
         'sujet' => $sujet,
         'id'  => 1
-]);
+    ]);
+}
+
+if(!empty($_GET['idtopic']) && $_SESSION['admin'] == 1)
+{
+    $idtopic = $_GET['idtopic'];
+    DeleteTopic($idtopic);
+}
+else if(!empty($_GET['idtopic']) && $_SESSION['admin'] == 0)
+{
+
+    echo '<h2 style="color:red; font-size:50px;">Arrête de faire n\'importe quoi !<h2>';
+    header( "refresh:5;url=logout.php" );
+
+    
+}
+function DeleteTopic($idtopic)
+{
+    $db = new PDO('mysql:host=localhost;port=3307;dbname=forum-php', 'root');
+    $sqldel = "DELETE FROM sujet WHERE Identifiant_Sujet = :idtopic";
+    $querydel = $db->prepare($sqldel);
+    $querydel->execute([
+        'idtopic' => $idtopic
+    ]);
 }
 ?>
 <!DOCTYPE html>
@@ -33,26 +56,45 @@ if (!empty($_POST)){
     </form>
 
     <div>
-        <?php 
-        $sql2 = $db->prepare('SELECT * FROM sujet');
-        $result = $sql2->execute();
-        $data = $sql2->fetchAll();
-        foreach($data as $row){
-            $sujet2 = $row['Libelle'];
-            $idSujet = $row['Identifiant_Sujet'];
+        <table>
+            <?php 
+            $sql2 = $db->prepare('SELECT * FROM sujet');
+            $result = $sql2->execute();
+            $data = $sql2->fetchAll();
+            foreach($data as $row){
+                $sujet2 = $row['Libelle'];
+                $idSujet = $row['Identifiant_Sujet'];
 
-            echo '<tr>';
-                echo '<td>';
-                echo '<a href=';
-                echo 'sujet.php?id='.$idSujet.'>';
-                echo htmlspecialchars($sujet2);
-                echo '</a>';
-                echo '<br/>';
-                echo '</td>';
-            echo '</tr>';
-        };
-        ?>
+                echo '<tr>';
+                    echo '<td>';
+                    echo '<a href=';
+                    echo 'sujet.php?id='.$idSujet.'>';
+                    echo htmlspecialchars($sujet2);
+                    echo '</a>';
+                    echo '</td>';
+                    if($_SESSION['admin'] == 1)
+                    {
+                        echo '<td>';
+                            echo '<button style="margin-left: 10px;" onclick="deleteTopic('.$idSujet.')">Supprimer</button>';
+                        echo '</td>';
+                    }
+                    echo '<br/>';                    
+                echo '</tr>';
+            };
+            ?>
+        </table>
     </div>
-    <a href="logout.php"><h2>Se déconnecter</h2></a>
+    <a href="logout.php" id="logout"><h2>Se déconnecter</h2></a>
 </body>
 </html>
+<script>
+    function deleteTopic(idtopic)
+    {
+        let yes = confirm("Voulez-vous vraiment supprimer ce sujet ?");
+        if(yes == true)
+        {
+            console.log(idtopic);
+            window.location.href = "index.php?idtopic=" + idtopic;            
+        }
+    }
+</script>
