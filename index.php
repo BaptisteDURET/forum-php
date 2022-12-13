@@ -12,7 +12,7 @@ if (!empty($_POST)){
     $query = $db->prepare($sql);
     $query->execute([
         'sujet' => $sujet,
-        'id'  => 1
+        'id'  => $_SESSION['id']
     ]);
 }
 
@@ -50,9 +50,10 @@ function DeleteTopic($idtopic)
 </head>
 <body>
     <h1>Bienvenue <?php echo $_SESSION['username']; ?></h1>
+    <a href="profil.php" style="text-align:right;"><h2>Profils</h2></a>
     <form action="" method="POST">
         <input type="text" name="sujet" id="sujetInput">
-        <input type="submit" name="Creer" value="Créer sujet">
+        <input style="margin:10px auto;" type="submit" name="Creer" value="Créer sujet">
     </form>
 
     <div>
